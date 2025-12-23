@@ -25,54 +25,7 @@ CREATE TYPE booking_status_enum AS ENUM (
 --  enums end  --
 
 
--- tables start  --
 
-CREATE TABLE users (
-  id UUID PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(50) NOT NULL UNIQUE,
-  password TEXT NOT NULL,
-  role user_role_enum NOT NULL,
-  phone VARCHAR(20) NOT NULL
-);
-
-CREATE TABLE vehicles (
-  id UUID PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  type vehicle_type_enum NOT NULL,
-  model VARCHAR(255) NOT NULL,
-  registration_number VARCHAR(100) NOT NULL UNIQUE,
-  price_per_day DECIMAL NOT NULL,
-  availability_status vehicle_availability_enum NOT NULL
-);
-
-CREATE TABLE bookings (
-  id UUID PRIMARY KEY,
-  user_id UUID NOT NULL,
-  vehicle_id UUID NOT NULL,
-  rent_start_date DATE NOT NULL,
-  rent_end_date DATE,
-  status booking_status_enum NOT NULL,
-  total_cost DECIMAL NOT NULL,
-
-  CONSTRAINT fk_booking_user
-    FOREIGN KEY (user_id)
-    REFERENCES users(id)
-    ON DELETE CASCADE,
-
-  CONSTRAINT fk_booking_vehicle
-    FOREIGN KEY (vehicle_id)
-    REFERENCES vehicles(id)
-    ON DELETE RESTRICT,
-
-  CONSTRAINT chk_rent_dates
-    CHECK (
-      rent_end_date IS NULL
-      OR rent_end_date >= rent_start_date
-    )
-);
-
--- tables end  --
 
 
 
